@@ -17,9 +17,35 @@ st.set_page_config(layout="wide")
 st.title("Stock Market Dashboard")
 
 # Stock selection dropdown
-stocks = {"NVIDIA (NVDA)": "NVDA", "Apple (AAPL)": "AAPL", "Microsoft (MSFT)": "MSFT"}
+stocks = {
+    "Alphabet (GOOGL)": "GOOGL",
+    "Amazon (AMZN)": "AMZN",
+    "American Airlines (AAL)": "AAL",
+    "Apple (AAPL)": "AAPL",
+    "Hewlett Packard Enterprise (HPE)": "HPE",
+    "Intel (INTC)": "INTC",
+    "Meta (META)": "META",
+    "Microsoft (MSFT)": "MSFT",
+    "NVIDIA (NVDA)": "NVDA",
+    "Tesla (TSLA)": "TSLA"
+}
+
 selected_stock = st.selectbox("Select a stock:", list(stocks.keys()))
 stock_ticker = stocks[selected_stock]
+
+# Map stock tickers to company names (Add this explicitly inside app.py)
+company_names = {
+    "NVDA": "NVIDIA Corporation NASDAQ:NVDA",
+    "AAPL": "Apple Inc. NASDAQ:AAPL",
+    "MSFT": "Microsoft Corporation NASDAQ:MSFT",
+    "AAL": "American Airlines Group Inc. NASDAQ:AAL",
+    "GOOGL": "Alphabet Inc. NASDAQ:GOOGL",
+    "TSLA": "Tesla Inc. NASDAQ:TSLA",
+    "AMZN": "Amazon.com Inc. NASDAQ:AMZN",
+    "META": "Meta Platforms Inc. NASDAQ:META",
+    "INTC": "Intel Corporation NASDAQ:INTC",
+    "HPE": "Hewlett Packard Enterprise NYSE:HPE",
+}
 
 # Time period selection
 time_periods = {
@@ -65,7 +91,7 @@ company_names = {
     "AAPL": "Apple Inc. NASDAQ:AAPL",
     "MSFT": "Microsoft Corporation NASDAQ:MSFT",
 }
-news = get_stock_news(stock_ticker, company_names[stock_ticker])
+news = get_stock_news(stock_ticker)
 
 st.subheader(f"Latest News on {selected_stock}")
 for article in news:
