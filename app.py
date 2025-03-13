@@ -69,7 +69,8 @@ with col2:
     df_display = df.copy()
     df_display.index = pd.to_datetime(df_display.index, utc=True).tz_localize(None).strftime("%Y-%m-%d")
     df_display = df_display.sort_index(ascending=False)
-    df_display[["Open", "Close", "Low", "High", "Volume"]] = df_display[["Open", "Close", "Low", "High", "Volume"]].applymap(lambda x: f"{x:.2f}")
+    for col in ["Open", "Close", "Low", "High", "Volume"]:
+        df_display[col] = df_display[col].apply(lambda x: f"{x:,.2f}")
     st.dataframe(df_display[["Open", "Close", "Low", "High", "Volume"]].head(10))
 
 with col3:
