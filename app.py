@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from components.chart_generator import generate_chart
 from components.data_loader import load_stock_data, calculate_technical_indicators
 from components.news_fetcher import get_stock_news
+from components.key_events_fetcher import get_key_events
 from datetime import datetime
 
 # Load environment variables
@@ -33,19 +34,6 @@ stocks = {
 selected_stock = st.selectbox("Select a stock:", list(stocks.keys()))
 stock_ticker = stocks[selected_stock]
 
-# Map stock tickers to company names (Add this explicitly inside app.py)
-company_names = {
-    "NVDA": "NVIDIA Corporation NASDAQ:NVDA",
-    "AAPL": "Apple Inc. NASDAQ:AAPL",
-    "MSFT": "Microsoft Corporation NASDAQ:MSFT",
-    "AAL": "American Airlines Group Inc. NASDAQ:AAL",
-    "GOOGL": "Alphabet Inc. NASDAQ:GOOGL",
-    "TSLA": "Tesla Inc. NASDAQ:TSLA",
-    "AMZN": "Amazon.com Inc. NASDAQ:AMZN",
-    "META": "Meta Platforms Inc. NASDAQ:META",
-    "INTC": "Intel Corporation NASDAQ:INTC",
-    "HPE": "Hewlett Packard Enterprise NYSE:HPE",
-}
 
 # Time period selection
 time_periods = {
@@ -70,18 +58,27 @@ if selected_period != "Max":
     df = df[df.index >= cutoff_date]
 
 # Create layout for graph and data table
-col1, col2 = st.columns([3, 2])
+col1, col2, col3 = st.columns([4.3, 2, 2])
 
 with col1:
     generate_chart(df, selected_stock)
 
 with col2:
     # Display stock data table
-    st.subheader(f"{selected_stock} - Latest Prices")
+    st.subheader("Latest Prices")
     df_display = df.copy()
     df_display.index = pd.to_datetime(df_display.index, utc=True).tz_localize(None).strftime("%Y-%m-%d")
     df_display = df_display.sort_index(ascending=False)
-    st.dataframe(df_display[["Open", "High", "Low", "Close"]].head(10))
+    df_display[["Open", "Close", "Low", "High", "Volume"]] = df_display[["Open", "Close", "Low", "High", "Volume"]].applymap(lambda x: f"{x:.2f}")
+    st.dataframe(df_display[["Open", "Close", "Low", "High", "Volume"]].head(10))
+
+with col3:
+    # Fetch and display key events
+    st.subheader(f"Key Events")
+    key_events = get_key_events(stock_ticker)
+
+    for event, date in key_events.items():
+        st.markdown(f"**{event}:** {date}")
 
 st.markdown("---")
 
@@ -90,6 +87,13 @@ company_names = {
     "NVDA": "NVIDIA Corporation NASDAQ:NVDA",
     "AAPL": "Apple Inc. NASDAQ:AAPL",
     "MSFT": "Microsoft Corporation NASDAQ:MSFT",
+    "AAL": "American Airlines Group Inc. NASDAQ:AAL",
+    "GOOGL": "Alphabet Inc. NASDAQ:GOOGL",
+    "TSLA": "Tesla Inc. NASDAQ:TSLA",
+    "AMZN": "Amazon.com Inc. NASDAQ:AMZN",
+    "META": "Meta Platforms Inc. NASDAQ:META",
+    "INTC": "Intel Corporation NASDAQ:INTC",
+    "HPE": "Hewlett Packard Enterprise NYSE:HPE",
 }
 news = get_stock_news(stock_ticker)
 

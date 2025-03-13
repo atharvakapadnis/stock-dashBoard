@@ -23,10 +23,26 @@ def load_stock_data(ticker):
     return df
 
 def calculate_technical_indicators(df):
-    """Calculates moving averages and Bollinger Bands."""
+    #  Calculates moving averages.
     df["SMA_50"] = df["Close"].rolling(window=50).mean()
     df["SMA_200"] = df["Close"].rolling(window=200).mean()
     df["EMA_20"] = df["Close"].ewm(span=20, adjust=False).mean()
+    
+    # Calculates Bollinger Bands.
     df["Upper_Band"] = df["Close"].rolling(window=20).mean() + (df["Close"].rolling(window=20).std() * 2)
     df["Lower_Band"] = df["Close"].rolling(window=20).mean() - (df["Close"].rolling(window=20).std() * 2)
+
+    # Calculate RSI
+    delta = df["Close"].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+    rs = gain / loss
+    df["RSI"] = 100 - (100 / (1 + rs))
+
+    # Calculate MACD
+    short_ema = df["Close"].ewm(span=12, adjust=False).mean()
+    long_ema = df["Close"].ewm(span=26, adjust=False).mean()
+    df["MACD"] = short_ema - long_ema
+    df["Signal_Line"] = df["MACD"].ewm(span=9, adjust=False).mean()
+    df["MACD_Histogram"] = df["MACD"] - df["Signal_Line"]
     return df
