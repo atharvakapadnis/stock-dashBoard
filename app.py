@@ -12,7 +12,7 @@ from datetime import datetime
 load_dotenv()
 
 # Set Streamlit to wide mode
-st.set_page_config(layout="wide")
+st.set_page_config(page_title='Stock Market Dashboard', layout="wide")
 
 # Website Heading
 st.title("Stock Market Dashboard")
