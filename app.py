@@ -61,7 +61,7 @@ if selected_period != "Max":
 col1, col2, col3 = st.columns([4.3, 2, 2])
 
 with col1:
-    generate_chart(df, selected_stock)
+    selected_model = generate_chart(df, selected_stock, stock_ticker)
 
 with col2:
     # Display stock data table
@@ -72,7 +72,7 @@ with col2:
     for col in ["Open", "Close", "Low", "High", "Volume"]:
         df_display[col] = df_display[col].apply(lambda x: f"{x:,.2f}")
     st.dataframe(df_display[["Open", "Close", "Low", "High", "Volume"]].head(10))
-
+    
 with col3:
     # Fetch and display key events
     st.subheader(f"Key Events")
@@ -80,22 +80,12 @@ with col3:
 
     for event, date in key_events.items():
         st.markdown(f"**{event}:** {date}")
+    
 
 st.markdown("---")
 
 # Fetch stock news
-company_names = {
-    "NVDA": "NVIDIA Corporation NASDAQ:NVDA",
-    "AAPL": "Apple Inc. NASDAQ:AAPL",
-    "MSFT": "Microsoft Corporation NASDAQ:MSFT",
-    "AAL": "American Airlines Group Inc. NASDAQ:AAL",
-    "GOOGL": "Alphabet Inc. NASDAQ:GOOGL",
-    "TSLA": "Tesla Inc. NASDAQ:TSLA",
-    "AMZN": "Amazon.com Inc. NASDAQ:AMZN",
-    "META": "Meta Platforms Inc. NASDAQ:META",
-    "INTC": "Intel Corporation NASDAQ:INTC",
-    "HPE": "Hewlett Packard Enterprise NYSE:HPE",
-}
+
 news = get_stock_news(stock_ticker)
 
 st.subheader(f"Latest News on {selected_stock}")
