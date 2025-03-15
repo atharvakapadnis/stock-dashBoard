@@ -8,7 +8,7 @@ import streamlit as st
 # Load environment variables
 load_dotenv()
 
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+NEWS_API_KEY = "d3625e265719408da7ffaf7cd03ef924"
 NEWS_URL = "https://newsapi.org/v2/everything"
 
 @st.cache_data(ttl=86400)
