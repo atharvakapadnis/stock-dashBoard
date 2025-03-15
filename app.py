@@ -61,7 +61,7 @@ if selected_period != "Max":
 col1, col2, col3 = st.columns([4.3, 2, 2])
 
 with col1:
-    generate_chart(df, selected_stock)
+    selected_model = generate_chart(df, selected_stock, stock_ticker)
 
 with col2:
     # Display stock data table
@@ -72,7 +72,7 @@ with col2:
     for col in ["Open", "Close", "Low", "High", "Volume"]:
         df_display[col] = df_display[col].apply(lambda x: f"{x:,.2f}")
     st.dataframe(df_display[["Open", "Close", "Low", "High", "Volume"]].head(10))
-
+    
 with col3:
     # Fetch and display key events
     st.subheader(f"Key Events")
@@ -80,22 +80,12 @@ with col3:
 
     for event, date in key_events.items():
         st.markdown(f"**{event}:** {date}")
+    
 
 st.markdown("---")
 
 # Fetch stock news
-company_names = {
-    "NVDA": "NVIDIA Corporation NASDAQ:NVDA",
-    "AAPL": "Apple Inc. NASDAQ:AAPL",
-    "MSFT": "Microsoft Corporation NASDAQ:MSFT",
-    "AAL": "American Airlines Group Inc. NASDAQ:AAL",
-    "GOOGL": "Alphabet Inc. NASDAQ:GOOGL",
-    "TSLA": "Tesla Inc. NASDAQ:TSLA",
-    "AMZN": "Amazon.com Inc. NASDAQ:AMZN",
-    "META": "Meta Platforms Inc. NASDAQ:META",
-    "INTC": "Intel Corporation NASDAQ:INTC",
-    "HPE": "Hewlett Packard Enterprise NYSE:HPE",
-}
+
 news = get_stock_news(stock_ticker)
 
 st.subheader(f"Latest News on {selected_stock}")
@@ -104,3 +94,35 @@ for article in news:
     st.caption(f"{article['source']['name']} - {article['publishedAt'][:10]}")
     st.write(article["description"])
     st.markdown("---")
+
+st.subheader("About This Project")
+st.markdown(
+    """
+    **Stock Market Dashboard** is an interactive platform I built for **stock analysis and predictive modeling**.  
+    It has allowed me to explore historical stock trends, visualize key technical indicators, and evaluate deep learning-based stock price predictions.
+
+    ---
+
+    ## Research Background  
+    This project is an extension of my **time series analysis research initiative**, focused on stock price forecasting.  
+    Throughout this research, I explored a variety of methodologies, including:
+
+    - **Classical models**: ARIMA, VAR  
+    - **Deep learning models**: LSTM, GRU  
+    - **Hybrid models**: ARIMA + LSTM, XGBoost + LSTM, CNN + LSTM  
+    - **Advanced techniques**: Graph Neural Networks, AutoML  
+
+    **Key Achievements:**
+    - Developed **predictive models** tailored for multiple stocks  
+    - Integrated **technical indicators** to improve forecasting accuracy  
+    - Experimented with **hybrid modeling techniques** to enhance predictive performance  
+
+    ---
+
+    ## Disclaimer  
+    This dashboard is a **learning project** I created for research and educational purposes.  
+    It **does not provide financial advice** and should not be used for actual trading or investment decisions.  
+
+    **Check out the source code on [GitHub](https://github.com/atharvakapadnis/stock-forecasting-ai) for more details.**
+    """
+)
